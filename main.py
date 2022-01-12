@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import cvzone
 
 class HandDetector:
 
@@ -44,7 +45,7 @@ class HandDetector:
 
                 myHand["lmList"] = mylmList
                 myHand["bbox"] = bbox
-                myHand["center"] =  (cx, cy)
+                myHand["center"] = (cx, cy)
 
                 if flipType:
                     if handType.classification[0].label =="Right":
@@ -56,6 +57,7 @@ class HandDetector:
 
                 if draw:
                     self.mpDraw.draw_landmarks(img, handLms, self.mpHands.HAND_CONNECTIONS)
+
                     if myHand["type"] == "Right":
                         cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[0] + bbox[2] + 20, bbox[1] + bbox[3] + 20), (0, 0, 255), 2)
                     elif myHand["type"] == "Left":
@@ -70,10 +72,14 @@ class HandDetector:
 
 def main():
     cap = cv2.VideoCapture(0)
+    FPS_Reader = cvzone.FPS()
     detector = HandDetector(detectionCon=0.8, maxHands=2)
+
     while True:
         success, img = cap.read()
         hands, img = detector.findHands(img)
+        fps, img = FPS_Reader.update(img, (35,35), (0,0,0), 2, 1)
+
 
         if hands:
             hand1 = hands[0]
