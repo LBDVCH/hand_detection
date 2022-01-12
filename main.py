@@ -73,7 +73,7 @@ def main():
     detector = HandDetector(detectionCon=0.8, maxHands=2)
     while True:
         success, img = cap.read()
-        hands, img = detector.findHands(img)  # with draw
+        hands, img = detector.findHands(img)
 
         if hands:
             hand1 = hands[0]
